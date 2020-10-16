@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/filerItem"
+        android:title=""
+        app:showAsAction="always"
+        android:icon="@drawable/ic_filter_list">
+        <menu>
+            <item android:title="@string/all"
+                android:id="@+id/all"/>
+            <item android:title="@string/answered"
+                android:id="@+id/answered" />
+            <item android:title="@string/unanswered"
+                android:id="@+id/unanswered" />
+        </menu>
+    </item>
+</menu>

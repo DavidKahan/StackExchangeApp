@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">My Stack Exchange</string>
+    <string name="text_retry">Retry</string>
+    <string name="text_has_answer_desc">Has Answer Image</string>
+    <string name="text_score_desc">Score Image</string>
+    <string name="all">All</string>
+    <string name="answered">Answered</string>
+    <string name="unanswered">Unanswered</string>
+</resources>

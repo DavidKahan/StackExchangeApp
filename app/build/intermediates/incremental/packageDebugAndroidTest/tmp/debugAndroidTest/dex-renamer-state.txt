@@ -1,0 +1,7 @@
+#Fri Oct 16 17:24:09 IDT 2020
+base.0=/Users/zz1mjd/AndroidStudioProjects/MyStackExchange/app/build/intermediates/dex/debugAndroidTest/mergeExtDexDebugAndroidTest/classes.dex
+path.1=classes.dex
+renamed.1=classes2.dex
+path.0=classes.dex
+renamed.0=classes.dex
+base.1=/Users/zz1mjd/AndroidStudioProjects/MyStackExchange/app/build/intermediates/dex/debugAndroidTest/mergeProjectDexDebugAndroidTest/classes.dex
