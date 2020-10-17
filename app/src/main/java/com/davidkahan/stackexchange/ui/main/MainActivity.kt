@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setupViews()
         fetchAllQuestions()
+        initSwipeToRefresh()
     }
 
 
@@ -33,17 +34,14 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId){
             R.id.all -> {
-//                stackViewModel.refresh()
                 fetchAllQuestions()
                 true
             }
             R.id.answered -> {
-//                stackViewModel.refresh()
                 fetchFilteredQuestionsByIsAnswered(true)
                 true
             }
             R.id.unanswered -> {
-//                stackViewModel.refresh()
                 fetchFilteredQuestionsByIsAnswered(false)
                 true
             }
@@ -51,12 +49,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-//    private fun initSwipeToRefresh() {
-//        swipeRefresh.setOnRefreshListener {
-//            questionsAdapter.refresh()
-//            swipeRefresh.isRefreshing = false
-//        }
-//    }
+    private fun initSwipeToRefresh() {
+        swipeRefresh.setOnRefreshListener {
+            fetchAllQuestions()
+            swipeRefresh.isRefreshing = false
+        }
+    }
 
 
 
