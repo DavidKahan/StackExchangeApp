@@ -7,11 +7,14 @@ import com.davidkahan.stackexchange.data.database.StackExchangeDatabase
 import com.davidkahan.stackexchange.data.network.StackExchangeApiService
 import com.davidkahan.stackexchange.datamodels.Question
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
 /**
  * Created by David Kahan on 15/10/2020.
  */
-class StackExchangeRepository(private val stackExchangeApiService: StackExchangeApiService, private val stackExchangeDatabase: StackExchangeDatabase): StackExRepositoryProtocol {
+class StackExchangeRepository @Inject constructor(
+    private val stackExchangeApiService: StackExchangeApiService,
+    private val stackExchangeDatabase: StackExchangeDatabase): StackExRepositoryProtocol {
 
     private lateinit var filteredQuestions: LiveData<List<Question>>
     fun filteredQuestions() = filteredQuestions

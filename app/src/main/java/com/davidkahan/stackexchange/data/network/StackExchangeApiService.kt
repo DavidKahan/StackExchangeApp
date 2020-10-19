@@ -2,7 +2,6 @@ package com.davidkahan.stackexchange.data.network
 
 import com.davidkahan.stackexchange.datamodels.QuestionsResponse
 import okhttp3.HttpUrl
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET

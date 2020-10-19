@@ -7,10 +7,12 @@ import android.view.MenuItem
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.davidkahan.stackexchange.R
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     val questionsAdapter = QuestionsAdapter()
     private val mainViewModel: MainViewModel by lazy {

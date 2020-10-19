@@ -6,7 +6,6 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.davidkahan.stackexchange.datamodels.Question
 import com.davidkahan.stackexchange.utils.Constants
-import kotlinx.coroutines.CoroutineScope
 
 /**
  * Created by David Kahan on 15/10/2020.
@@ -20,14 +19,14 @@ abstract class StackExchangeDatabase : RoomDatabase() {
         @Volatile
         private var INSTANCE: StackExchangeDatabase? = null
 
-        fun getDatabase(context: Context, scope: CoroutineScope): StackExchangeDatabase {
+        fun getDatabase(appContext: Context): StackExchangeDatabase {
             val tempInstance = INSTANCE
             if (tempInstance != null) {
                 return tempInstance
             }
             synchronized(this) {
                 val instance = Room.databaseBuilder(
-                    context.applicationContext,
+                    appContext,
                     StackExchangeDatabase::class.java,
                     Constants.DATA_BASE_NAME
                 ).build()

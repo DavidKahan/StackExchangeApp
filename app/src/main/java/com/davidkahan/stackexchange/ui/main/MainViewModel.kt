@@ -1,27 +1,16 @@
 package com.davidkahan.stackexchange.ui.main
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.davidkahan.stackexchange.data.database.StackExchangeDatabase
-import com.davidkahan.stackexchange.data.network.StackExchangeApi
 import com.davidkahan.stackexchange.data.repository.StackExchangeRepository
 import com.davidkahan.stackexchange.datamodels.Question
 import kotlinx.coroutines.flow.Flow
 
-class MainViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val repository: StackExchangeRepository
-
-    init {
-        val stackExchangeDatabase = StackExchangeDatabase.getDatabase(application,viewModelScope)
-        val stackExchangeApi = StackExchangeApi.stackExchangeApiService
-        repository = StackExchangeRepository(stackExchangeApi,stackExchangeDatabase)
-    }
-
+class MainViewModel @ViewModelInject() constructor(private val repository: StackExchangeRepository): ViewModel() {
 
     fun fetchAllQuestions(): Flow<PagingData<Question>> {
         return repository.fetchQuestions().cachedIn(viewModelScope)

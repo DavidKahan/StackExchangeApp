@@ -2,6 +2,8 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'dagger.hilt.android.plugin'
+
 
 
 android {
@@ -71,6 +73,12 @@ dependencies {
 
     // SwipeRefreshLayout
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+
+    // Hilt dependencies
+    implementation 'com.google.dagger:hilt-android:2.28.1-alpha'
+    implementation "androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha02"
+    kapt 'com.google.dagger:hilt-android-compiler:2.28.1-alpha'
+    kapt "androidx.hilt:hilt-compiler:1.0.0-alpha02"
 
     // Dagger 2
     implementation "com.google.dagger:dagger:$daggerVersion"
