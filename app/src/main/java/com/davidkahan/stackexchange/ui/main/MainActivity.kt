@@ -1,19 +1,24 @@
 package com.davidkahan.stackexchange.ui.main
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.RecyclerView
 import com.davidkahan.stackexchange.R
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+
+    private var jobAll: Job? = null
+    private var jobFiltered: Job? = null
+
     val questionsAdapter = QuestionsAdapter()
     private val mainViewModel: MainViewModel by lazy {
         ViewModelProvider(this).get(MainViewModel::class.java)
@@ -61,7 +66,8 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun fetchAllQuestions() {
-        lifecycleScope.launch {
+        jobAll = lifecycleScope.launch {
+            jobFiltered?.cancel()
             mainViewModel.fetchAllQuestions().collectLatest { pagingData ->
                 questionsAdapter.submitData(pagingData)
             }
@@ -69,7 +75,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun fetchFilteredQuestionsByIsAnswered(isAnswered: Boolean) {
-        lifecycleScope.launch {
+        jobFiltered = lifecycleScope.launch {
+            jobAll?.cancel()
             mainViewModel.fetchFilteredQuestionsByIsAnswered(isAnswered).collectLatest { pagingData ->
                 questionsAdapter.submitData(pagingData)
             }
