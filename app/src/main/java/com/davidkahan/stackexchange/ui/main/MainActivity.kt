@@ -6,20 +6,16 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.RecyclerView
+import androidx.lifecycle.observe
 import com.davidkahan.stackexchange.R
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    private var jobAll: Job? = null
-    private var jobFiltered: Job? = null
-
-    val questionsAdapter = QuestionsAdapter()
+    private val questionsAdapter = QuestionsAdapter()
     private val mainViewModel: MainViewModel by lazy {
         ViewModelProvider(this).get(MainViewModel::class.java)
     }
@@ -28,8 +24,17 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setupViews()
+        initObservers()
         fetchAllQuestions()
         initSwipeToRefresh()
+    }
+
+    private fun initObservers() {
+        mainViewModel.questions.observe(this){
+            lifecycleScope.launch{
+                questionsAdapter.submitData(it)
+            }
+        }
     }
 
 
@@ -45,11 +50,11 @@ class MainActivity : AppCompatActivity() {
                 true
             }
             R.id.answered -> {
-                fetchFilteredQuestionsByIsAnswered(true)
+                mainViewModel.fetchFilteredQuestionsByIsAnswered(true)
                 true
             }
             R.id.unanswered -> {
-                fetchFilteredQuestionsByIsAnswered(false)
+                mainViewModel.fetchFilteredQuestionsByIsAnswered(false)
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -63,24 +68,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
-
     private fun fetchAllQuestions() {
-        jobAll = lifecycleScope.launch {
-            jobFiltered?.cancel()
-            mainViewModel.fetchAllQuestions().collectLatest { pagingData ->
-                questionsAdapter.submitData(pagingData)
-            }
-        }
-    }
-
-    private fun fetchFilteredQuestionsByIsAnswered(isAnswered: Boolean) {
-        jobFiltered = lifecycleScope.launch {
-            jobAll?.cancel()
-            mainViewModel.fetchFilteredQuestionsByIsAnswered(isAnswered).collectLatest { pagingData ->
-                questionsAdapter.submitData(pagingData)
-            }
-        }
+        mainViewModel.fetchAllQuestions()
     }
 
     private fun setupViews() {

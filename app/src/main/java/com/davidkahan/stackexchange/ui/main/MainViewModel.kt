@@ -1,30 +1,44 @@
 package com.davidkahan.stackexchange.ui.main
 
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.davidkahan.stackexchange.data.repository.StackExchangeRepository
 import com.davidkahan.stackexchange.datamodels.Question
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.flow.collectLatest
 
 class MainViewModel @ViewModelInject() constructor(private val repository: StackExchangeRepository): ViewModel() {
 
-    fun fetchAllQuestions(): Flow<PagingData<Question>> {
-        return repository.fetchQuestions().cachedIn(viewModelScope)
+    var questions: MutableLiveData<PagingData<Question>> = MutableLiveData()
+    val coroutineContext = SupervisorJob() + IO
+    var allJob: Job = Job()
+    var filteredJob: Job = Job()
+
+    fun fetchAllQuestions(){
+        filteredJob.cancel()
+        allJob = viewModelScope.launch {
+            withContext(coroutineContext) {
+                repository.fetchQuestions()
+                    .cachedIn(viewModelScope)
+                    .collectLatest { questions.postValue(it) }
+            }
+        }
+
     }
 
-    fun fetchFilteredQuestionsByIsAnswered(isAnswered: Boolean): Flow<PagingData<Question>>  {
-        return repository.getFilteredQuestionsByIsAnswered(isAnswered).cachedIn(viewModelScope)
+    fun fetchFilteredQuestionsByIsAnswered(isAnswered: Boolean) {
+        allJob.cancel()
+        filteredJob = viewModelScope.launch {
+            repository.getFilteredQuestionsByIsAnswered(isAnswered)
+                .cachedIn(viewModelScope)
+                .collectLatest { questions.postValue(it) }
+        }
     }
 
     fun filteredQuestionsByIsAnswered(isAnswered: Boolean): LiveData<List<Question>> {
         return repository.getFilteredQuestionsLiveDataByIsAnswered(isAnswered)
-    }
-
-    fun refresh(){
-        repository.refresh()
     }
 }
